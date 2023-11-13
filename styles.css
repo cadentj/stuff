@@ -5,7 +5,7 @@ html {
     font-family: Arial, sans-serif;
     background: #f4f4f4;
     color: #333;
-    height: 100%;
+    height: 80%;
 }
 
 .container {
@@ -32,6 +32,14 @@ p a {
 
 .navigation a.current {
     font-weight: bold; /* This will make the text bold */
+}
+
+.press-header {
+    color: #aaa; /* Light grey color */
+    margin-top: 0px;
+    margin-bottom: 0px; /* Spacing between the header and the links */
+    font-size: 12px; /* Match the size of your press links or adjust as necessary */
+    /* Add any other styles you need for this header */
 }
 
 .navigation a {
