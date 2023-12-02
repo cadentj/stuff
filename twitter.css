@@ -2,15 +2,13 @@
 
 /* Twitter-like thread styles */
 .twitter-thread {
-    background-color: #ffffff;
-    border: 1px solid #e1e8ed;
-    border-radius: 16px;
     margin: 20px;
     padding: 10px;
 }
 
 .tweet {
     padding: 10px;
+    padding-top: 15px;
     border-bottom: 1px solid #e1e8ed;
 }
 
@@ -39,13 +37,13 @@
     margin-top: 5px;
 }
 
-.tweet-interaction {
+/* .tweet-interaction {
     display: flex;
     justify-content: space-around;
     font-size: 0.9em;
     color: #657786;
     margin-top: 10px;
-}
+} */
 
 /* Add icons or more styling to tweet-interaction spans for a closer look */
 
@@ -53,5 +51,7 @@
 @media (max-width: 600px) {
     .twitter-thread {
         margin: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
     }
 }
