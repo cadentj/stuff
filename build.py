@@ -4,7 +4,7 @@ import markdown
 
 def build_blog():
     # Ensure the blog output directory exists
-    blog_output_dir = 'public/blog'
+    blog_output_dir = 'docs/blog'
     os.makedirs(blog_output_dir, exist_ok=True)
 
     # List of blog posts for the index page
@@ -42,11 +42,11 @@ def build_blog():
     blog_links = ''.join([f'<li><a href="/blog/{filename}">{title}</a></li>' for title, filename in blog_posts])
     index_html = index_template.replace('{{ blog_posts }}', f'<ul>{blog_links}</ul>')
 
-    with open('public/blog.html', 'w') as file:
+    with open('docs/blog.html', 'w') as file:
         file.write(index_html)
 
-# Ensure the public directory exists
-os.makedirs('public', exist_ok=True)
+# Ensure the docs directory exists
+os.makedirs('docs', exist_ok=True)
 
 with open('src/content.html', 'r') as file:
     content = file.read().strip()
@@ -58,13 +58,13 @@ with open('templates/base.html', 'r') as file:
 # Replace placeholders with actual content
 page = template.replace('{{ content }}', content)
 
-# Write the final HTML to the public directory
-with open('public/index.html', 'w') as file:
+# Write the final HTML to the docs directory
+with open('docs/index.html', 'w') as file:
     file.write(page)
 
 # Copy static assets
 source_static_dir = 'static'
-destination_static_dir = 'public/static'
+destination_static_dir = 'docs/static'
 if os.path.exists(destination_static_dir):
     shutil.rmtree(destination_static_dir)
 shutil.copytree(source_static_dir, destination_static_dir)
