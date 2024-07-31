@@ -6,6 +6,10 @@ h2 {
     font-size: 1em !important;
 }
 
+.spaced li:not(:last-child) {
+    margin-bottom: 15px; /* Adjust the value as needed */
+}
+
 .container {
     display: flex;
     justify-content: center;
