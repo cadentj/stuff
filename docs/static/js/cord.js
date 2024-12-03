@@ -3,13 +3,13 @@ function toggleColorMode() {
     element.classList.toggle("dark-mode");
 
     const cordHandle = document.getElementById('cord-handle');
-    // Save the current mode to localStorage
+
     if (element.classList.contains('dark-mode')) {
         localStorage.setItem('darkMode', 'enabled');
-        cordHandle.textContent = '☼'; // Sun for dark mode
+        cordHandle.textContent = '☼'; 
     } else {
         localStorage.setItem('darkMode', 'disabled');
-        cordHandle.textContent = '☾'; // Moon for light mode
+        cordHandle.textContent = '☾'; 
     }
 }
 
@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cordHandle = document.getElementById('cord-handle');
     const cordLine = document.getElementById('cord-line');
     
-    // Set initial handle character based on current theme
     if (document.documentElement.classList.contains('dark-mode')) {
         cordHandle.textContent = '☼';
     } else {
@@ -31,19 +30,53 @@ document.addEventListener('DOMContentLoaded', () => {
     let startY = 0;
     let currentY = 0;
     const maxPullLength = 50; // Maximum pull length in pixels
+    let isAnimating = false; // Add this flag to prevent multiple animations
 
     // Get initial positions
     const initialHandleTop = parseInt(window.getComputedStyle(cordHandle).top, 10);
     const initialLineHeight = parseInt(window.getComputedStyle(cordLine).height, 10);
 
-    cordHandle.addEventListener('mousedown', (e) => {
-        e.preventDefault(); // Prevents text selection and dragging images
-        isDragging = true;
-        startY = e.clientY;
+    // Add click handler for animation
+    cordHandle.addEventListener('click', (e) => {
+        if (!isDragging && !isAnimating) {
+            e.preventDefault();
+            isAnimating = true;
 
-        // Disable transitions during dragging for immediate response
-        cordHandle.style.transition = 'none';
-        cordLine.style.transition = 'none';
+            // Set up animation
+            cordHandle.style.transition = 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            cordLine.style.transition = 'height 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+
+            // Pull down
+            cordHandle.style.top = `${initialHandleTop + maxPullLength}px`;
+            cordLine.style.height = `${initialLineHeight + maxPullLength}px`;
+
+            // After pulling down, spring back up
+            setTimeout(() => {
+                cordHandle.style.transition = 'top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+                cordLine.style.transition = 'height 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+                
+                cordHandle.style.top = `${initialHandleTop}px`;
+                cordLine.style.height = `${initialLineHeight}px`;
+
+                toggleColorMode();
+                
+                // Reset the animation flag after animation completes
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 500);
+            }, 300);
+        }
+    });
+
+    cordHandle.addEventListener('mousedown', (e) => {
+        if (!isAnimating) {  // Only allow dragging if not animating
+            e.preventDefault();
+            isDragging = true;
+            startY = e.clientY;
+
+            cordHandle.style.transition = 'none';
+            cordLine.style.transition = 'none';
+        }
     });
 
     document.addEventListener('mousemove', (e) => {
