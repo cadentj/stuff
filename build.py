@@ -63,7 +63,7 @@ def build_blog():
         f'<li><a href="/blog/{filename}">{title}</a></li>' 
         for title, filename in blog_posts
     ])
-    index_html = BLOG_INDEX_TEMPLATE.replace('{{ blog_posts }}', f'<ul>{blog_links}</ul>')
+    index_html = BLOG_INDEX_TEMPLATE.replace('{{ blog_posts }}', f'<ul class="blog-posts">{blog_links}</ul>')
 
     # Write
     with open('docs/blog.html', 'w') as file:

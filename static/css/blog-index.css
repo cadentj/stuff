@@ -1,0 +1,8 @@
+ul.blog-posts {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul.blog-posts li {
+    margin-bottom: 1em;
+}

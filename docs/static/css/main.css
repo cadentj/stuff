@@ -1,3 +1,37 @@
+html {
+    font-family: 'Inter', sans-serif;
+    background-color: #FFFCF0;
+    color: #100F0F;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark-mode {
+    background-color: #100F0F;
+    color: #CECDC3;
+}
+
+/* Temporarily disable transition on page load */
+html.no-transition {
+    transition: none !important;
+}
+
+a {
+    color: #100F0F;
+    text-decoration: underline;
+}
+
+.dark-mode a {
+    color: #CECDC3;
+}
+
+a:hover {
+    color: #205EA6;
+}
+
+.dark-mode a:hover {
+    color: #4385BE;
+}
+
 h1 {
     font-size: 1.17em !important;
 }
@@ -7,7 +41,8 @@ h2 {
 }
 
 .spaced li:not(:last-child) {
-    margin-bottom: 15px; /* Adjust the value as needed */
+    margin-bottom: 15px;
+    /* Adjust the value as needed */
 }
 
 .container {

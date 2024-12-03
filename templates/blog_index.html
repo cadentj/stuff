@@ -4,11 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/breadcrumbs.css">
+    <link rel="stylesheet" href="/static/css/blog-index.css">
+    <link rel="stylesheet" href="/static/css/cord.css">
     <title>Caden's Blog</title>
+
+    <script>
+        const savedMode = localStorage.getItem('darkMode');
+        if (savedMode === 'enabled') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 <body class="container">
+    <div id="pull-cord">
+        <div id="cord-line"></div>
+        <div id="cord-handle"></div>
+    </div>
+
     <div class="inner">
+        <ul class="breadcrumb">
+            <li><a href="/">root</a></li>
+            <li>blog</li>
+        </ul>
         {{ blog_posts }}
     </div>
+
+    <script src="/static/js/cord.js"></script>
 </body>
 </html>

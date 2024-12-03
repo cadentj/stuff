@@ -4,9 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/cord.css">
     <title>Caden Juang</title>
+
+    <script>
+        const savedMode = localStorage.getItem('darkMode');
+        if (savedMode === 'enabled') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 <body class="container">
+    <div id="pull-cord">
+        <div id="cord-line"></div>
+        <div id="cord-handle"></div>
+    </div>
+
     <div class="inner">
         <p>Hi! I'm Caden.</p>
 
@@ -20,6 +37,7 @@
 <h1>Current</h1>
 
 <ul>
+    <li><a href="https://www.matsprogram.org/">MATS w Neel Nanda</a></li>
     <li><a href="https://baulab.info">Bau Lab</a></li>
     <li><a href="http://nnsight.net">NNsight</a></li>
 </ul>
@@ -27,6 +45,24 @@
 <h1>Work</h1>
 
 <ul class="spaced">
+    <!-- <li>
+        <strong>NNterface: A Visual Interface for NNsight</strong>
+        <br />
+        <b>Caden Juang</b>, Jaden Fiotto-Kaufman
+        <br />
+        <i>Blog</i>
+        <br />
+        <a href="./blog/nnterface.html">post</a>
+    </li> -->
+    <li>
+        <strong>Automatically Interpreting Millions of Features in Large Language Models</strong>
+        <br />
+        Gonçalo Paulo, Alex Mallen, <b>Caden Juang</b>, Nora Belrose
+        <br />
+        <i>Arxiv</i>
+        <br />
+        <a href="https://arxiv.org/abs/2410.13928">paper</a>
+    </li>
     <li>
         <strong>Open Source Automated Interpretability for Sparse Autoencoder Features</strong>
         <br />
@@ -59,21 +95,23 @@
 <h1>Other</h1>
 
 <ul>
-    <li><a href="https://www.mitalignment.org">MAIA</a> - student group</li>
+    <li><a href="https://aialignment.mit.edu/">MAIA</a> - student group</li>
     <li><a href="https://gammatau.ai">GammaTau</a> - PL and AI group</li>
     <li><a href="https://www.arena.education">ARENA 3.0</a></li>
-    <li><a href="https://beaverworks.ll.mit.edu">Beaverworks</a> - part time instructor</li>
+    <li><a href="https://beaverworks.ll.mit.edu">Beaverworks</a></li>
     <li>
-        <a href="https://open.spotify.com/user/rtk00srd9ojdwcta7m4dqgr5d?si=9be880d550ac4dd2">Spotify</a> - send song recs!
+        <a href="https://open.spotify.com/user/rtk00srd9ojdwcta7m4dqgr5d?si=9be880d550ac4dd2">Spotify</a>
     </li>
     <li>
-        <a href="https://www.fox26houston.com/news/5-houston-high-school-students-named-runner-ups-in-prestigious-intensive-global-math-competition">M3</a> - math modeling
+        <a href="https://m3challenge.siam.org/wp-content/uploads/RUNNER-UP_16573.pdf">M3</a>
     </li>
-    <li><a href="https://www.sjs.org/news-detail?pk=1015243">Trivia</a> - i was a literature main haha</li>
+    <li><a href="https://www.sjs.org/news-detail?pk=1015243">Trivia</a></li>
 </ul>
 <br />
 <hr>
-<i>Last updated: 07/2024</i>
+<i>Last updated: 12/2024</i> | <a href="https://github.com/cadentj/stuff">source</a>
     </div>
+
+    <script src="/static/js/cord.js"></script>
 </body>
 </html>
