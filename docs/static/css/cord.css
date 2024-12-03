@@ -4,6 +4,12 @@
     left: 75%;
 }
 
+@media (max-width: 768px) {
+    #pull-cord {
+        left: 90%;
+    }
+}
+
 #cord-line {
     position: absolute;
     top: 0px;
