@@ -7,79 +7,104 @@ Date: 2024-12-03
 <style>
     html {
         background-color: #FFFCF0 !important;
+
+        line-height: 1.5rem;
     }
     html.dark-mode {
-        background-color: #111211 !important;
+        background-color: #100F0F !important;
+    }
+
+    h1 {
+        font-size: 2em !important;
+    }
+
+    h2 {
+        font-size: 1.5em !important;
     }
 </style>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
 
-# Introduction
+This post is a writeup for some early ideas of what a whitebox AI interface might look like.
 
-<img src="../static/images/animation.gif" alt="Animated tiles" width="500" loading="lazy">
+## Motivation
 
-This post is a writeup for ongoing work on designing a whitebox interface for interacting with AI systems.
+How do we make interpretability research accessible? 
 
-Motivation 
+I built an interface for white box interaction with language models. It provides a simple, visual language for expressing interventions. I’ll illustrate its usage by implementing three common interpretability techniques.
 
-The Monitor research demo from Transluce deployed a model investigator AI system for actively understanding an LLM’s behavior. Their design centered around principles of empowering users, hand in hand with an AI investigator, to investigate fine grained model behavior.
+## Example: Logit Lens
 
-[[illustration]] 
+Logit lens is an early exit technique which directly decodes hidden states into vocabulary space using the model’s unembedding matrix. 
 
-While chat interfaces are the primary method of interacting with AI systems, they’re ultimately more restrictive. They limit our understanding to an individual neuron level; I question: how might we allow users to deploy cutting edge interpretability on any model? 
+We investigate how the model completes the sentence “The Eiffel Tower is located in the city of”. To do so, we’ll build a small program to track the probability of the correct token, `_Paris`, at each layer.
 
-Design and Principles
+Every program in the interface starts with a run context. The context represents a single forward pass of a model; in this example, we’ve loaded GPT2 for study. We’d like to view the probability for the token `_Paris` at each layer of GPT2, so we drag a module node from the tree into the canvas. To capture activations from a module, simply drag from its handle. Connecting to another valid handle creates a directed edge, denoting a get operation. 
 
-When designing no code interfaces, there’s careful balance between abstraction and detail. For example, block based programming languages are an intuitive way for kids to get started programming. Programming is like learning a language [citation needed]; offering structure, hierarchy, and prewritten components up front abstracts away the a lot of the learning curve. 
+Transformers are composed of a series of identical layers. We wrap the module node with a loop context to get activations at each layer. The context accepts some start/end indices and returns a variable which we enter as the index in our module node. GPT2 has twelve layers, so we loop accordingly.
 
-However, block based languages don’t fit well onto existing libraries. Toolkits like sklearn or pandas are an abstraction on top of existing languages - building block based systems directly onto existing abstractions doesn’t make sense. The difficulty of learning sklearn or pytorch is understanding all the arguments and options - code blocks don’t boil that away.
+Function nodes enable arbitrary code injection, allowing any PyTorch program to be represented in the interface. Within the code editor, we enter some arguments and write two short lines of code that return the probability over `_Paris`.
 
-[[insert image of pytorch ml]]
+[[side by side of editor and function in python, showing how they are the same]]
 
-Flow based editors are one solution. In Comfy UI, users design diffusion pipelines with drag and drop nodes. Pipelines can be as small as a couple nodes or scale to the complexity of a whole project. I found this an enticing approach and set out to design a similar system centered around the NNsight package [footnote link to walkthrough].
+We append the output of the function to a list. Finally, we add a graph node at the end to visualize the outputs. When we execute the program, we can open up a graphing panel to the right where we can visualize the outputs of the intervention. 
 
-The Interface
+<img src="../static/images/nnterface/lens.gif" alt="Logit Lens" width="500" loading="lazy">
 
-Design
+Figure 1: This graph displays the probability over the token `_Paris` at each layer of GPT2.
 
-The interface is designed around NNsight - it primarily subgraphs between nodes to describe the context execution blocks used in the library. I’ll NNsight alongside visual components from the library to provide context for those who haven’t used it before. 
+## Example: Steering
 
-A Pytorch model consists of modules - named class attributes which are module objects are shown as members of the pytree. 
+Turner et al. 2023 demonstrate a simple method where combining forward passes can be used to steer completions. We replicate an example from their post to steer GPT2 to talk about weddings in unrelated contexts. 
 
-[[ image showing (left) raw pytree text (middle) dropdown with atomic names (right) cleaned pytree ]] 
+<img src="../static/images/nnterface/steer.gif" alt="Logit Lens" width="500" loading="lazy">
 
-NNsight wraps modules in the pytree with Envoys that expose an input and output property. Accessing the properties exposes proxies. Interactions between proxies within a trace context creates nodes on a graph – this is done by overriding magic methods on envoys. 
+Here, we use two run contexts for two forward passes: one to collect activations from a wedding prompt and one to steer. We get the wedding activation at some middle layer and add it to the activation of a different prompt. An edge to a module handle denotes a set operation, replacing the activations. 
 
-[[image showing input output envoy toggle]]
+This method of activation steering is a little finicky; we can open the toolbar on the right to check whether the prompts are of compatible length. 
 
-Dragging the node of one module to another, within a trace context, applies a directed get-> set operation. All operations are done within contexts. Contexts denote operations carried out in different forward passes of the model’s execution. 
+We generate multiple tokens by opening the chat tab to the right. Text we write here is passed as input to a run context that uses the chat node. 
 
-[[show set operation]]
+<img src="../static/images/nnterface/chat.gif" alt="Logit Lens" width="500" loading="lazy">
 
-To minimize computation and execution cost, one may choose to batch traces together. In this case, an extra batch context allows operations to run at the same time. 
+In fact, we can literally chat with our interventions; loading an instruct or chat tuned model opens a conversational interface.
 
-There are some default functions like basic arithmetic operations. Custom torch functions are available by expanding the code editor. Up to five inputs and one output are permitted for a block.
+## Example: Patching
 
-[[show functions, function editor]].
+Activation patching highlights the causal importance of certain points during a model’s computation. This technique is more involved, so I’ll mostly highlight features rather than discussing implementation details.
 
-The interface comes with several predefined visualization blocks. A heatmap is useful for viewing patching effects per layer. A line graph is more effective for understanding the probability of certain tokens during the model’s predictions.
+[[picture of intervention with different passes labeled with numbers]]
 
-Building
+We run the model three times. (1) We compute a baseline prediction from a “clean” prompt. (2) Then we run a “corrupted” prompt in which the subjects are swapped. We cache the layer activations and logits over the “corrupted” completion. 
 
-I used svelte flow for the main drag and drop functionality.. Why Svelte? I just found it a lot more intuitive and fun to use than React.
+(3) Finally, we run the model on a corrupted input but restore activations at different token/layer positions. Here, we use the batch context to run multiple inputs in a single forward pass. For each batched run, the effect is: 
 
-The backend
+$$\text{effect} = \frac{\text{restored} - \text{corrupted}}{\text{clean} - \text{corrupted}}$$
 
-How do I compile a visual language? Ultimately, I want to compile my visual abstraction of NNsight into raw nnsight code to be executed and results returned back to the user. Another benefit is that operations with the visual interface are easily exportable to raw NNsight to be run as Python.
+We visualize the intervention as before, this time with a heatmap.
 
-The easiest solution is to perform a topological sort TS by dependencies. Consider the following graph: 
+[[gif of running the intervention, selecting heatmap]]
 
-Executing TS on this graph returns the following node order.
+This intervention is more complex, but it follows from the primitives discussed above. Arguably the coolest feature of NNterface is the ability to export our interventions to NNsight code in Python!
 
-[[node order, latex?]]
+<img src="../static/images/nnterface/export.gif" alt="Logit Lens" width="500" loading="lazy">
 
-This doesn’t work. We forgot to include contexts in the graph. For each node, we set its parent to be its immediate context. However, TS  again on the nodes still doesn't work. The issue is that there’s no scope closure within context blocks. Later operations may interact with operations defined within a context block. We draw arrows between
+## Looking forward
+
+I had a lot of fun learning Svelte and writing the visual compiler for this project, but I don’t plan on pursuing it further. At the point a user is learning my visual language, they might as well learn NNsight. It's a beautiful library with a similar goal of separability between experimentation and engineering in Python. 
+
+However, this project is a great way to communicate interpretability techniques. For example, an inexperienced user could play around with activation patching, testing different metrics or saving outputs from different modules. The hands-on experience without a coding prior makes it easy to learn about interventions.
+
+There are a couple immediate extensions from my final product. 
+<ul>
+  <li>Activation patching is a lot to set up each time. A component tab would allow users to merge a set of connected nodes into a component. For example, an activation patching component might accept a corrupted prompt and return a list of layer outputs and final logits.</li>
+  <li>Currently, NNterface is only available as a local installation. Scaling interventions is hard, and it’s the entire purpose of  NDIF. A backend might scale to multiple users by (1) catching a graph request from the frontend, (2) compiling it, (3) sending an intervention graph to nnsight, and (4) passing the webhook to the frontend rather than threading some long running request.</li>
+  <li>There isn’t a lot of visual feedback if interventions don’t work.</li>
+  <li>It wouldn’t be too difficult to implement training probes or LoRA.</li>
+</ul>
 
 
-Acknowledgements
+## Acknowledgements
 
-Much thanks to Jaden Fiotto Kaufmann for building the NNsight library.  
+Much thanks to Jaden Fiotto Kaufmann for building the NNsight library.
