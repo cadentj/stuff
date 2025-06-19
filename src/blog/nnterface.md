@@ -21,10 +21,57 @@ Date: 2024-12-03
     h2 {
         font-size: 1.5em !important;
     }
+
+    body {
+        font-size: 1.25em !important;
+    }
+
+    img {
+        border-style: solid;
+        border-width: 2px;
+        border-color: #282726;
+    }
+
+    .example-box {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .example-box:hover {
+        transform: scale(1.05);
+    }
 </style>
+
+<nav class="toc">
+    <ul>
+        <li><a href="#motivation">Motivation</a></li>
+        <li><a href="#example-logit-lens">Example: Logit Lens</a></li>
+        <li><a href="#example-steering">Example: Steering</a></li>
+        <li><a href="#example-patching">Example: Patching</a></li>
+        <li><a href="#looking-forward">Looking Forward</a></li>
+        <li><a href="#acknowledgements">Acknowledgements</a></li>
+    </ul>
+</nav>
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0;">
+    <div class="example-box" style="padding: 15px; border: 1px solid #282726; border-radius: 5px;">
+        <h3>Item 1</h3>
+        <p>First grid item content</p>
+    </div>
+    <div class="example-box" style="padding: 15px; border: 1px solid #282726; border-radius: 5px;">
+        <h3>Item 2</h3>
+        <p>Second grid item content</p>
+    </div>
+    <div class="example-box" style="padding: 15px; border: 1px solid #282726; border-radius: 5px;">
+        <h3>Item 3</h3>
+        <p>Third grid item content</p>
+    </div>
+</div>
+
 <script type="text/javascript" id="MathJax-script" async
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
 </script>
+
+
 
 This post is a writeup for some early ideas of what a whitebox AI interface might look like.
 
@@ -108,3 +155,4 @@ There are a couple immediate extensions from my final product.
 ## Acknowledgements
 
 Much thanks to Jaden Fiotto Kaufmann for building the NNsight library.
+

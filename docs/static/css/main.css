@@ -52,15 +52,60 @@ h2 {
     padding: 0 20px;
     margin-top: 5vh;
     margin-bottom: 5vh;
+    position: relative;
 }
 
 .inner {
     width: 100%;
 }
 
+
+.toc {
+    position: fixed;
+    left: 20px;
+    top: 5vh;
+    width: 200px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding-right: 20px;
+    font-size: 0.9em;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc li {
+    margin-bottom: 8px;
+}
+
+.toc a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.toc a:hover {
+    color: #205EA6;
+}
+
+.dark-mode .toc a:hover {
+    color: #4385BE;
+}
+
 @media (min-width: 768px) {
     .container {
-        width: 30vw;
+        width: 35vw;
         padding: 0;
+    }
+    
+    .toc {
+        left: calc((100vw - 35vw) / 2 - 220px);
+    }
+}
+
+@media (max-width: 768px) {
+    .toc {
+        display: none;
     }
 }
