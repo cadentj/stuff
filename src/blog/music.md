@@ -5,230 +5,408 @@ Visible: True
 Date: 2025-07-18
 ---
 
-<style>
-.music-container {
-  position: relative;
-}
-
-.music-sidebar {
-  position: fixed;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 200px;
-  background: #FFFCF0;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  z-index: 100;
-}
-
-.dark-mode .music-sidebar {
-  background: #100F0F;
-  border-color: #2a2a2a;
-  box-shadow: 0 2px 10px rgba(255,255,255,0.1);
-}
-
-.album-cover {
-  width: 100%;
-  height: 120px;
-  border: 2px solid #282726;
-  border-radius: 4px;
-  margin-bottom: 15px;
-  background: #f5f5f5;
-}
-
-.dark-mode .album-cover {
-  background: #2a2a2a;
-}
-
-.song-info {
-  font-size: 0.9em;
-  line-height: 1.4;
-}
-
-.song-title {
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.song-description {
-  color: #666;
-  font-style: italic;
-}
-
-.dark-mode .song-description {
-  color: #999;
-}
-
-.song-item {
-  position: relative;
-  padding: 4px 0;
-  transition: transform 0.2s ease;
-}
-
-.song-item.selected {
-  transform: translateX(8px);
-}
-
-.song-item.selected::before {
-  content: '>';
-  position: absolute;
-  left: -15px;
-  color: #205EA6;
-  font-weight: bold;
-}
-
-.dark-mode .song-item.selected::before {
-  color: #4385BE;
-}
-
-@media (max-width: 1200px) {
-  .music-sidebar {
-    display: none;
-  }
-}
-</style>
-
-<div class="music-container">
-
 - Some days I listen to more music than I do silence. 
 - I don't listen to lyrics.
 
 ---
 
-# Transluce
-She only knows (starflyer 59)<br>
-jeans (2 hollis)<br>
-si tu m'aimes demain (lliona)<br>
+<div id="music-container">
+    <div id="song-list">
+        <!-- Songs will be populated by JavaScript -->
+    </div>
+    <div id="description-panel">
+        <div id="progress-indicator">1/85 songs</div>
+        <div id="description-content">
+            <p>Select a song to view its description</p>
+        </div>
+    </div>
+</div>
 
-# Boston
+<style>
+#music-container {
+    display: flex;
+    gap: 4rem;
+    height: 60vh;
+    margin: 2rem 0;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
 
-## May
-smithereens (boyish)<br>
-rap snitch knishes (mf doom)<br>
+#song-list {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
 
-## April
-Want to love - just raw (aloboi)<br>
-i come with mud (men i trust)<br>
-flesh without blood (grimes)<br>
-glistening (flipturn)<br>
-夏夜最後的浪漫 (default)<br>
+#description-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
 
-# MATS
+#description-content {
+    text-align: center;
+    color: var(--text-color, #100F0F);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-## Feb, March
-bamboleo (gipsy kings)<br>
-B.O.R (birth of rap) (lil b)<br>
-space boy (Manny laurenko, LUCKI)<br>
+#progress-indicator {
+    font-size: 0.8rem;
+    color: var(--text-muted, #666);
+    margin-bottom: 1rem;
+}
 
-## Jan 
-L$D (A$AP rocky)<br>
-velvet ring (big thief)<br>
-wild blue (john mayer)<br>
-? (vaundy)<br>
+.song-item {
+    padding: 0.5rem 0;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
 
-# Sophomore Fall
-ma meillure ennemie (stromae, pomme, Arcane)<br>
-west savannah (isaiah rashad, SZA)<br>
-(laufey)<br>
+.song-item:hover {
+    transform: translateX(5px);
+}
 
-# Summer 2024
 
-## July
-no one noticed (the marias)<br>
-do ya think im sexy? (rod stewart)<br>
-casual (chappel roan)<br>
 
-## June
-unlock it (Abra, playboy carti, boys noize)<br>
-marked till death (meat computer)<br>
-i luv it (camila cabello, playboy carti)<br>
+.song-name {
+    color: var(--text-color, #100F0F);
+    line-height: 1.4;
+}
 
-## May
-end of the beginning (djo)<br>
-love lost (mac miller, the temper trap)<br>
-A$AP forever (feat. moby) (A$AP Rocky, moby)<br>
-everything is romantic (charlie xcx)<br>
+.artist {
+    color: var(--text-muted, #666);
+    font-size: 0.9em;
+}
 
-## April
-vete (kevin kaarl)<br>
-over the moon (the marias)<br>
+/* Mobile layout */
+@media (max-width: 768px) {
+    #music-container {
+        flex-direction: column;
+        height: 80vh;
+    }
+    
+    #description-panel {
+        order: -1;
+        flex: 0 0 auto;
+        margin-bottom: 1rem;
+    }
+    
+    #song-list {
+        flex: 1;
+    }
+}
 
-# Freshman Spring (London)
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #CECDC3;
+        --text-muted: #999;
+        --accent-color: #4385BE;
+    }
+}
 
-## March, April
-know my name (snow strippers)<br>
-you and i (lucidbeatz, emilia ali)<br>
-i like the way you kiss me (artemas)<br>
-oblivion (grimes)<br>
-kerosene (crystal castles)<br>
+/* Light mode (default) */
+:root {
+    --text-color: #100F0F;
+    --text-muted: #666;
+    --accent-color: #205EA6;
+}
+</style>
 
-## April
-intro (end of the world)<br>
+<script>
+const songs = [
+    // Transluce
+    { period: "Transluce", title: "She only knows", artist: "starflyer 59", description: "" },
+    { period: "Transluce", title: "jeans", artist: "2 hollis", description: "" },
+    { period: "Transluce", title: "si tu m'aimes demain", artist: "lliona", description: "" },
+    
+    // Boston
+    { period: "Boston", subPeriod: "May", title: "smithereens", artist: "boyish", description: "" },
+    { period: "Boston", subPeriod: "May", title: "rap snitch knishes", artist: "mf doom", description: "" },
+    { period: "Boston", subPeriod: "April", title: "Want to love - just raw", artist: "aloboi", description: "" },
+    { period: "Boston", subPeriod: "April", title: "i come with mud", artist: "men i trust", description: "" },
+    { period: "Boston", subPeriod: "April", title: "flesh without blood", artist: "grimes", description: "" },
+    { period: "Boston", subPeriod: "April", title: "glistening", artist: "flipturn", description: "" },
+    { period: "Boston", subPeriod: "April", title: "夏夜最後的浪漫", artist: "default", description: "" },
+    
+    // MATS
+    { period: "MATS", subPeriod: "Feb, March", title: "bamboleo", artist: "gipsy kings", description: "" },
+    { period: "MATS", subPeriod: "Feb, March", title: "B.O.R (birth of rap)", artist: "lil b", description: "" },
+    { period: "MATS", subPeriod: "Feb, March", title: "space boy", artist: "Manny laurenko, LUCKI", description: "" },
+    { period: "MATS", subPeriod: "Jan", title: "L$D", artist: "A$AP rocky", description: "" },
+    { period: "MATS", subPeriod: "Jan", title: "velvet ring", artist: "big thief", description: "" },
+    { period: "MATS", subPeriod: "Jan", title: "wild blue", artist: "john mayer", description: "" },
+    { period: "MATS", subPeriod: "Jan", title: "?", artist: "vaundy", description: "" },
+    
+    // Sophomore Fall
+    { period: "Sophomore Fall", title: "ma meillure ennemie", artist: "stromae, pomme, Arcane", description: "" },
+    { period: "Sophomore Fall", title: "west savannah", artist: "isaiah rashad, SZA", description: "" },
+    { period: "Sophomore Fall", title: "", artist: "laufey", description: "" },
+    
+    // Summer 2024
+    { period: "Summer 2024", subPeriod: "July", title: "no one noticed", artist: "the marias", description: "" },
+    { period: "Summer 2024", subPeriod: "July", title: "do ya think im sexy?", artist: "rod stewart", description: "" },
+    { period: "Summer 2024", subPeriod: "July", title: "casual", artist: "chappel roan", description: "" },
+    { period: "Summer 2024", subPeriod: "June", title: "unlock it", artist: "Abra, playboy carti, boys noize", description: "" },
+    { period: "Summer 2024", subPeriod: "June", title: "marked till death", artist: "meat computer", description: "" },
+    { period: "Summer 2024", subPeriod: "June", title: "i luv it", artist: "camila cabello, playboy carti", description: "" },
+    { period: "Summer 2024", subPeriod: "May", title: "end of the beginning", artist: "djo", description: "" },
+    { period: "Summer 2024", subPeriod: "May", title: "love lost", artist: "mac miller, the temper trap", description: "" },
+    { period: "Summer 2024", subPeriod: "May", title: "A$AP forever (feat. moby)", artist: "A$AP Rocky, moby", description: "" },
+    { period: "Summer 2024", subPeriod: "May", title: "everything is romantic", artist: "charlie xcx", description: "" },
+    { period: "Summer 2024", subPeriod: "April", title: "vete", artist: "kevin kaarl", description: "" },
+    { period: "Summer 2024", subPeriod: "April", title: "over the moon", artist: "the marias", description: "" },
+    
+    // Freshman Spring (London)
+    { period: "Freshman Spring (London)", subPeriod: "March, April", title: "know my name", artist: "snow strippers", description: "" },
+    { period: "Freshman Spring (London)", subPeriod: "March, April", title: "you and i", artist: "lucidbeatz, emilia ali", description: "" },
+    { period: "Freshman Spring (London)", subPeriod: "March, April", title: "i like the way you kiss me", artist: "artemas", description: "" },
+    { period: "Freshman Spring (London)", subPeriod: "March, April", title: "oblivion", artist: "grimes", description: "" },
+    { period: "Freshman Spring (London)", subPeriod: "March, April", title: "kerosene", artist: "crystal castles", description: "" },
+    { period: "Freshman Spring (London)", subPeriod: "April", title: "intro", artist: "end of the world", description: "" },
+    { period: "Freshman Spring (London)", subPeriod: "Jan, Feb", title: "dolomeals", artist: "medhane", description: "" },
+    { period: "Freshman Spring (London)", subPeriod: "Jan, Feb", title: "johnny p's caddy", artist: "benny the butcher, J.cole", description: "" },
+    { period: "Freshman Spring (London)", subPeriod: "Jan, Feb", title: "daughters", artist: "john mayer", description: "" },
+    { period: "Freshman Spring (London)", subPeriod: "Jan, Feb", title: "sunrise", artist: "norah jones", description: "" },
+    
+    // Freshman Fall
+    { period: "Freshman Fall", subPeriod: "December", title: "godlight", artist: "noah kahan", description: "" },
+    { period: "Freshman Fall", subPeriod: "December", title: "from eden", artist: "hozier", description: "" },
+    { period: "Freshman Fall", subPeriod: "Sept, Oct, Nov", title: "organon", artist: "men i trust", description: "" },
+    { period: "Freshman Fall", subPeriod: "Sept, Oct, Nov", title: "lifelong song", artist: "men i trust", description: "" },
+    { period: "Freshman Fall", subPeriod: "Sept, Oct, Nov", title: "can you hear the music", artist: "ludwig goransson", description: "" },
+    { period: "Freshman Fall", subPeriod: "Sept, Oct, Nov", title: "paris, texas", artist: "lana del rey, SYML", description: "" },
+    { period: "Freshman Fall", subPeriod: "Sept, Oct, Nov", title: "west coast", artist: "lana del rey", description: "" },
+    { period: "Freshman Fall", subPeriod: "Sept, Oct, Nov", title: "say yes to heaven", artist: "lana del rey", description: "" },
+    
+    // Summer 2023
+    { period: "Summer 2023", title: "manana", artist: "tainy, young miko, the marias", description: "" },
+    { period: "Summer 2023", title: "tommy hanks", artist: "jakey", description: "" },
+    
+    // Senior Spring
+    { period: "Senior Spring", subPeriod: "Part 2", title: "i wonder", artist: "kanye west", description: "" },
+    { period: "Senior Spring", subPeriod: "Part 2", title: "nonviolent communication", artist: "metro boomin", description: "" },
+    { period: "Senior Spring", subPeriod: "Part 2", title: "flashing lights", artist: "kanye", description: "" },
+    { period: "Senior Spring", subPeriod: "Part 1", title: "you wouldn't know", artist: "zac crook", description: "" },
+    
+    // Senior Winter
+    { period: "Senior Winter", title: "that nicotine", artist: "ava beathard", description: "" },
+    { period: "Senior Winter", title: "superstar", artist: "boyish", description: "" },
+    { period: "Senior Winter", title: "i got it", artist: "masho", description: "" },
+    
+    // Summer 2022
+    { period: "Summer 2022", title: "uneasy", artist: "metronomy, spill tab", description: "" },
+    { period: "Summer 2022", title: "temple of the dragon", artist: "adam brian paul", description: "" },
+    
+    // Junior Year
+    { period: "Junior Year", title: "lovely day", artist: "bill withers", description: "" },
+    { period: "Junior Year", title: "split", artist: "88rising, niki", description: "" },
+    
+    // Summer 2021 (Lifeguarding)
+    { period: "Summer 2021 (Lifeguarding)", title: "beach bunny", artist: "cloud 9", description: "" },
+    { period: "Summer 2021 (Lifeguarding)", title: "brazil", artist: "declan mckenna", description: "" },
+    { period: "Summer 2021 (Lifeguarding)", title: "freaks", artist: "surf curse", description: "" },
+    { period: "Summer 2021 (Lifeguarding)", title: "karma", artist: "sarah kinsley", description: "" },
+    
+    // Late COVID
+    { period: "Late COVID", title: "hip", artist: "Mamamoo", description: "" },
+    { period: "Late COVID", title: "bad girl", artist: "wooah", description: "" },
+    
+    // Freshman Year
+    { period: "Freshman Year", title: "the louvre", artist: "lorde", description: "" },
+    { period: "Freshman Year", title: "righteous", artist: "juice wrld", description: "" },
+    { period: "Freshman Year", title: "ribs", artist: "lorde", description: "" },
+    { period: "Freshman Year", title: "drunk", artist: "keshi", description: "" },
+    { period: "Freshman Year", title: "skeletons", artist: "keshi", description: "" },
+    { period: "Freshman Year", title: "lowkey", artist: "niki", description: "" }
+];
 
-## Jan, Feb
-dolomeals (medhane)
-johnny p's caddy (benny the butcher, J.cole)<br>
-daughters (john mayer)<br>
-sunrise (norah jones)<br>
+let currentIndex = 0;
+let songElements = [];
+let scrollAccumulator = 0;
+let scrollThreshold = 25;
 
-# Freshman Fall
+function renderSongs() {
+    const songList = document.getElementById('song-list');
+    songList.innerHTML = '';
+    songElements = [];
+    
+    updateVisibleSongs();
+    
+    // Select first song by default
+    selectSong(0);
+}
 
-## December
-godlight (noah kahan)<br>
-from eden (hozier)<br>
+function updateVisibleSongs() {
+    const songList = document.getElementById('song-list');
+    const visibleCount = Math.min(15, songs.length);
+    
+    // Clear existing content
+    songList.innerHTML = '';
+    
+    // Calculate the range of songs to display - selected song at top
+    const startIndex = currentIndex;
+    const endIndex = Math.min(startIndex + visibleCount, songs.length);
+    
+    // Add songs in the visible range
+    for (let i = startIndex; i < endIndex; i++) {
+        const song = songs[i];
+        
+        const songItem = document.createElement('div');
+        songItem.className = 'song-item';
+        songItem.setAttribute('data-index', i);
+        
+        if (i === currentIndex) {
+            songItem.classList.add('selected');
+        }
+        
+        const songName = document.createElement('div');
+        songName.className = 'song-name';
+        const prefix = (i === currentIndex) ? '> ' : '';
+        songName.textContent = prefix + (song.title || '(untitled)');
+        
+        const artist = document.createElement('div');
+        artist.className = 'artist';
+        artist.textContent = `(${song.artist})`;
+        
+        songItem.appendChild(songName);
+        songItem.appendChild(artist);
+        
+        songItem.addEventListener('click', () => {
+            selectSong(i);
+        });
+        
+        songList.appendChild(songItem);
+    }
+    
+    // If we're near the end and don't have enough songs, add songs from the beginning
+    if (endIndex - startIndex < visibleCount) {
+        const remaining = visibleCount - (endIndex - startIndex);
+        for (let i = 0; i < remaining && i < songs.length; i++) {
+            const song = songs[i];
+            
+            const songItem = document.createElement('div');
+            songItem.className = 'song-item';
+            songItem.setAttribute('data-index', i);
+            
+            if (i === currentIndex) {
+                songItem.classList.add('selected');
+            }
+            
+            const songName = document.createElement('div');
+            songName.className = 'song-name';
+            const prefix = (i === currentIndex) ? '> ' : '';
+            songName.textContent = prefix + (song.title || '(untitled)');
+            
+            const artist = document.createElement('div');
+            artist.className = 'artist';
+            artist.textContent = `(${song.artist})`;
+            
+            songItem.appendChild(songName);
+            songItem.appendChild(artist);
+            
+            songItem.addEventListener('click', () => {
+                selectSong(i);
+            });
+            
+            songList.appendChild(songItem);
+        }
+    }
+}
 
-## Sept, Oct, Nov
-organon (men i trust)<br>
-lifelong song (men i trust)<br>
-can you hear the music (ludwig goransson)<br>
-paris, texas (lana del rey, SYML)<br>
-west coast (lana del rey)<br>
-say yes to heaven (lana del rey)<br>
+function selectSong(index) {
+    currentIndex = index;
+    
+    // Update description
+    updateDescription(songs[index]);
+    
+    // Re-render with selected song at top
+    updateVisibleSongs();
+}
 
-# Summer 2023
-manana (tainy, young miko, the marias)<br>
-tommy hanks (jakey)<br>
+function updateDescription(song) {
+    const descriptionContent = document.getElementById('description-content');
+    const progressIndicator = document.getElementById('progress-indicator');
+    
+    // Update progress
+    progressIndicator.textContent = `${currentIndex + 1}/${songs.length} songs`;
+    
+    if (song.description) {
+        descriptionContent.innerHTML = `<p>${song.description}</p>`;
+    } else {
+        descriptionContent.innerHTML = `<p style="font-style: italic; color: var(--text-muted);">No description available</p>`;
+    }
+}
 
-# Senior Spring
 
-## Part 2
-i wonder (kanye west)<br>
-nonviolent communication (metro boomin)<br>
-flashing lights (kanye)<br>
+function navigateUp() {
+    if (currentIndex > 0) {
+        selectSong(currentIndex - 1);
+    } else {
+        // Wrap to last song
+        selectSong(songs.length - 1);
+    }
+}
 
-## Part 1
-you wouldn't know (zac crook)<br>
+function navigateDown() {
+    if (currentIndex < songs.length - 1) {
+        selectSong(currentIndex + 1);
+    } else {
+        // Wrap to first song
+        selectSong(0);
+    }
+}
 
-# Senior Winter
-that nicotine (ava beathard)<br>
-superstar (boyish)<br>
-i got it (masho)<br>
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+    // Only handle arrow keys when the music container is in view
+    const musicContainer = document.getElementById('music-container');
+    const rect = musicContainer.getBoundingClientRect();
+    const isInView = rect.top >= 0 && rect.bottom <= window.innerHeight;
+    
+    if (isInView || document.activeElement.closest('#music-container')) {
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            navigateUp();
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            navigateDown();
+        }
+    }
+});
 
-# Summer 2022
-uneasy (metronomy, spill tab)<br>
-temple of the dragon (adam brian paul)<br>
+// Initialize when page loads
+function initializeMusicPlayer() {
+    renderSongs();
+    
+    // Mouse wheel/trackpad scroll navigation with accumulation
+    document.getElementById('song-list').addEventListener('wheel', (e) => {
+        e.preventDefault();
+        
+        scrollAccumulator += Math.abs(e.deltaY);
+        
+        if (scrollAccumulator >= scrollThreshold) {
+            scrollAccumulator = 0;
+            
+            if (e.deltaY > 0) {
+                // Scroll down - next song
+                navigateDown();
+            } else {
+                // Scroll up - previous song
+                navigateUp();
+            }
+        }
+    });
+}
 
-# Junior Year
-lovely day (bill withers)<br>
-split (88rising, niki)<br>
-
-# Summer 2021 (Lifeguarding)
-beach bunny (cloud 9)<br>
-brazil (declan mckenna)<br>
-freaks (surf curse)<br>
-karma (sarah kinsley)<br>
-
-# Late COVID
-hip (Mamamoo)<br>
-bad girl (wooah)<br>
-
-# Freshman Year
-the louvre (lorde)<br>
-righteous (juice wrld)<br>
-ribs (lorde)<br>
-drunk (keshi)<br>
-skeletons (keshi)<br>
-lowkey (niki)<br>
+// Initialize based on DOM state
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMusicPlayer);
+} else {
+    initializeMusicPlayer();
+}
+</script>
