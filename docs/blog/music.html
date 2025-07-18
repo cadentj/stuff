@@ -34,17 +34,12 @@
             <li>Music</li>
         </ul>
         <h1>Music</h1>
-<ul>
-<li>Some days I listen to more music than I do silence. </li>
-<li>I don't listen to lyrics.</li>
-</ul>
-<hr />
 <div id="music-container">
     <div id="song-list">
         <!-- Songs will be populated by JavaScript -->
     </div>
     <div id="description-panel">
-        <div id="progress-indicator">1/85 songs</div>
+        <!-- <div id="progress-indicator">1/85 songs</div> -->
         <div id="description-content">
             <p>Select a song to view its description</p>
         </div>
@@ -76,17 +71,12 @@
 
 #description-content {
     text-align: center;
-    color: var(--text-color, #100F0F);
+    color: var(--text-muted, #666);
     flex: 1;
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     justify-content: center;
-}
-
-#progress-indicator {
     font-size: 0.8rem;
-    color: var(--text-muted, #666);
-    margin-bottom: 1rem;
 }
 
 .song-item {
@@ -359,15 +349,15 @@ function selectSong(index) {
 
 function updateDescription(song) {
     const descriptionContent = document.getElementById('description-content');
-    const progressIndicator = document.getElementById('progress-indicator');
+    // const progressIndicator = document.getElementById('progress-indicator');
 
     // Update progress
-    progressIndicator.textContent = `${currentIndex + 1}/${songs.length} songs`;
+    // progressIndicator.textContent = `${currentIndex + 1}/${songs.length} songs`;
 
     if (song.description) {
-        descriptionContent.innerHTML = `<p>${song.description}</p>`;
+        descriptionContent.innerHTML = `<p>${song.description} (${currentIndex + 1}/${songs.length})</p>`;
     } else {
-        descriptionContent.innerHTML = `<p style="font-style: italic; color: var(--text-muted);">No description available</p>`;
+        descriptionContent.innerHTML = `<p style="font-style: italic; color: var(--text-muted);">No description available (${currentIndex + 1}/${songs.length})</p>`;
     }
 }
 
