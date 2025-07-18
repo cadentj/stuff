@@ -74,7 +74,6 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
     font-size: 0.8rem;
 }
 
@@ -103,7 +102,7 @@
 @media (max-width: 768px) {
     #music-container {
         flex-direction: column;
-        height: 50vh    ;
+        height: 60vh    ;
     }
 
     #description-panel {
@@ -115,7 +114,6 @@
 
     #song-list {
         flex: 1;
-        border-top: solid;
     }
 }
 
@@ -161,16 +159,16 @@ const songs = [
     { period: "MATS", subPeriod: "Jan", title: "踊り子", artist: "vaundy", description: "I think of Building C -- our little Neel scholar abode with its soft tofu lights and fuzzy carpet." },
 
     // Sophomore Fall
-    { period: "Sophomore Fall", title: "ma meillure ennemie", artist: "stromae, pomme, Arcane", description: "I remember watching Arcane season 2 in Addison's apartment during Harvard/Yale with all my friends in town. Harris and Oliver were no lifeing poker, and Addison was trying to build hexbugs out of tooth brush heads." },
+    { period: "Sophomore Fall", title: "ma meillure ennemie", artist: "stromae, pomme, Arcane", description: "I remember watching Arcane season 2 in Addison's apartment during Harvard/Yale with all my friends in town. Harris and Oliver were no life-ing poker, and Addison was trying to build hexbugs out of tooth brush heads." },
     { period: "Sophomore Fall", title: "west savannah", artist: "isaiah rashad, SZA", description: "" },
     { period: "Sophomore Fall", title: "", artist: "laufey", description: "Yay laufey!" },
 
     // Summer 2024
     { period: "Summer 2024", subPeriod: "July", title: "no one noticed", artist: "the marias", description: "" },
-    { period: "Summer 2024", subPeriod: "July", title: "do ya think im sexy?", artist: "rod stewart", description: "Isabella introduced me to this song, her Dad loved it. She a wonderful taste in music. Some blend of the Beatles and the worst bay area rap you've ever heard." },
+    { period: "Summer 2024", subPeriod: "July", title: "do ya think im sexy?", artist: "rod stewart", description: "Isabella introduced me to this song, her Dad loved it. She has a wonderful taste in music. Some blend of the Beatles and the worst bay area rap you've ever heard." },
     { period: "Summer 2024", subPeriod: "July", title: "casual", artist: "chappel roan", description: "" },
     { period: "Summer 2024", subPeriod: "June", title: "unlock it", artist: "Abra, playboy carti, boys noize", description: "I think of the walk from my apartment to 177 Huntington. The little park on the corner by Bluemoon Smoke Shop, filled with stinky summer geese." },
-    { period: "Summer 2024", subPeriod: "June", title: "marked till death", artist: "meat computer", description: "There's a line in this song, 'you ever pooped your pants?' that Oliver found hilarious. He put into a playlist when he was dating Skylar." },
+    { period: "Summer 2024", subPeriod: "June", title: "marked till death", artist: "meat computer", description: "There's a line in this song, 'you ever pooped your pants?' that Oliver found hilarious. He put it into a playlist when he was dating Skylar." },
     { period: "Summer 2024", subPeriod: "June", title: "i luv it", artist: "camila cabello, playboy carti", description: "" },
     { period: "Summer 2024", subPeriod: "May", title: "end of the beginning", artist: "djo", description: "" },
     { period: "Summer 2024", subPeriod: "May", title: "love lost", artist: "mac miller, the temper trap", description: "Blue bike rides across the bridge on Mass ave." },
@@ -247,6 +245,8 @@ let currentIndex = 0;
 let songElements = [];
 let scrollAccumulator = 0;
 let scrollThreshold = 25;
+let touchScrollThreshold = 25;
+let touchStartY = 0;
 
 function renderSongs() {
     const songList = document.getElementById('song-list');
@@ -429,6 +429,42 @@ function initializeMusicPlayer() {
                 // Scroll up - previous song
                 navigateUp();
             }
+        }
+    });
+
+    // Touch events for mobile
+    document.addEventListener('touchstart', (e) => {
+        const musicContainer = document.getElementById('music-container');
+        const rect = musicContainer.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+        if (isInView) {
+            touchStartY = e.touches[0].clientY;
+        }
+    });
+
+    document.addEventListener('touchmove', (e) => {
+        const musicContainer = document.getElementById('music-container');
+        const rect = musicContainer.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+        if (!isInView) return;
+
+        const touchY = e.touches[0].clientY;
+        const deltaY = touchStartY - touchY;
+
+        if (Math.abs(deltaY) > touchScrollThreshold) { // Threshold for touch swipe
+            e.preventDefault();
+
+            if (deltaY > 0) {
+                // Swipe up - next song
+                navigateDown();
+            } else {
+                // Swipe down - previous song
+                navigateUp();
+            }
+
+            touchStartY = touchY; // Reset for continuous swiping
         }
     });
 }

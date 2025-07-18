@@ -45,7 +45,6 @@ Date: 2025-07-18
     flex: 1;
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
     font-size: 0.8rem;
 }
 
@@ -74,7 +73,7 @@ Date: 2025-07-18
 @media (max-width: 768px) {
     #music-container {
         flex-direction: column;
-        height: 50vh    ;
+        height: 60vh    ;
     }
     
     #description-panel {
@@ -86,7 +85,6 @@ Date: 2025-07-18
     
     #song-list {
         flex: 1;
-        border-top: solid;
     }
 }
 
@@ -218,6 +216,8 @@ let currentIndex = 0;
 let songElements = [];
 let scrollAccumulator = 0;
 let scrollThreshold = 25;
+let touchScrollThreshold = 25;
+let touchStartY = 0;
 
 function renderSongs() {
     const songList = document.getElementById('song-list');
@@ -400,6 +400,42 @@ function initializeMusicPlayer() {
                 // Scroll up - previous song
                 navigateUp();
             }
+        }
+    });
+
+    // Touch events for mobile
+    document.addEventListener('touchstart', (e) => {
+        const musicContainer = document.getElementById('music-container');
+        const rect = musicContainer.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (isInView) {
+            touchStartY = e.touches[0].clientY;
+        }
+    });
+
+    document.addEventListener('touchmove', (e) => {
+        const musicContainer = document.getElementById('music-container');
+        const rect = musicContainer.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (!isInView) return;
+        
+        const touchY = e.touches[0].clientY;
+        const deltaY = touchStartY - touchY;
+        
+        if (Math.abs(deltaY) > touchScrollThreshold) { // Threshold for touch swipe
+            e.preventDefault();
+            
+            if (deltaY > 0) {
+                // Swipe up - next song
+                navigateDown();
+            } else {
+                // Swipe down - previous song
+                navigateUp();
+            }
+            
+            touchStartY = touchY; // Reset for continuous swiping
         }
     });
 }
