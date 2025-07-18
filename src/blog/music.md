@@ -88,20 +88,48 @@ Date: 2025-07-18
     }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --text-color: #CECDC3;
-        --text-muted: #999;
-        --accent-color: #4385BE;
-    }
+/* Light mode colors */
+#music-container {
+    background-color: #FFFCF0;
+    color: #100F0F;
 }
 
-/* Light mode (default) */
-:root {
-    --text-color: #100F0F;
-    --text-muted: #666;
-    --accent-color: #205EA6;
+.song-item.selected::before {
+    color: #205EA6;
+}
+
+#description-content {
+    color: #666;
+}
+
+.artist {
+    color: #666;
+}
+
+.song-name {
+    color: #100F0F;
+}
+
+/* Dark mode colors */
+.dark-mode #music-container {
+    background-color: #100F0F;
+    color: #CECDC3;
+}
+
+.dark-mode .song-item.selected::before {
+    color: #4385BE;
+}
+
+.dark-mode #description-content {
+    color: #999;
+}
+
+.dark-mode .artist {
+    color: #999;
+}
+
+.dark-mode .song-name {
+    color: #CECDC3;
 }
 </style>
 
