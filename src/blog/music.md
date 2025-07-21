@@ -5,13 +5,154 @@ Visible: True
 Date: 2025-07-18
 ---
 
-<div id="music-container">
-    <div id="song-list">
-        <!-- Songs will be populated -->
-    </div>
-    <div id="description-panel">
-        <div id="description-content">
-            <p>Select a song to view its description</p>
+<!-- Mobile version -->
+<div id="mobile-content" style="display: none;">
+    <h1>Transluce</h1>
+    <p>She only knows (starflyer 59)<br>
+    jeans (2 hollis)<br>
+    si tu m'aimes demain (lliona)<br></p>
+
+    <h1>Boston</h1>
+
+    <h2>May</h2>
+    <p>smithereens (boyish)<br>
+    rap snitch knishes (mf doom)<br></p>
+
+    <h2>April</h2>
+    <p>Want to love - just raw (aloboi)<br>
+    i come with mud (men i trust)<br>
+    flesh without blood (grimes)<br>
+    glistening (flipturn)<br>
+    夏夜最後的浪漫 (default)<br></p>
+
+    <h1>MATS</h1>
+
+    <h2>Feb, March</h2>
+    <p>bamboleo (gipsy kings)<br>
+    B.O.R (birth of rap) (lil b)<br>
+    space boy (Manny laurenko, LUCKI)<br></p>
+
+    <h2>Jan</h2>
+    <p>L$D (A$AP rocky)<br>
+    velvet ring (big thief)<br>
+    wild blue (john mayer)<br>
+    踊り子 (vaundy)<br></p>
+
+    <h1>Sophomore Fall</h1>
+    <p>ma meillure ennemie (stromae, pomme, Arcane)<br>
+    west savannah (isaiah rashad, SZA)<br>
+    (laufey)<br></p>
+
+    <h1>Summer 2024</h1>
+
+    <h2>July</h2>
+    <p>no one noticed (the marias)<br>
+    do ya think im sexy? (rod stewart)<br>
+    casual (chappel roan)<br></p>
+
+    <h2>June</h2>
+    <p>unlock it (Abra, playboy carti, boys noize)<br>
+    marked till death (meat computer)<br>
+    i luv it (camila cabello, playboy carti)<br></p>
+
+    <h2>May</h2>
+    <p>end of the beginning (djo)<br>
+    love lost (mac miller, the temper trap)<br>
+    A$AP forever (feat. moby) (A$AP Rocky, moby)<br>
+    everything is romantic (charlie xcx)<br></p>
+
+    <h2>April</h2>
+    <p>vete (kevin kaarl)<br>
+    over the moon (the marias)<br></p>
+
+    <h1>Freshman Spring (London)</h1>
+
+    <h2>March, April</h2>
+    <p>know my name (snow strippers)<br>
+    you and i (lucidbeatz, emilia ali)<br>
+    i like the way you kiss me (artemas)<br>
+    oblivion (grimes)<br>
+    kerosene (crystal castles)<br></p>
+
+    <h2>April</h2>
+    <p>intro (end of the world)<br></p>
+
+    <h2>Jan, Feb</h2>
+    <p>dolomeals (medhane)<br>
+    johnny p's caddy (benny the butcher, J.cole)<br>
+    daughters (john mayer)<br>
+    sunrise (norah jones)<br></p>
+
+    <h1>Freshman Fall</h1>
+
+    <h2>December</h2>
+    <p>godlight (noah kahan)<br>
+    from eden (hozier)<br></p>
+
+    <h2>Sept, Oct, Nov</h2>
+    <p>organon (men i trust)<br>
+    lifelong song (men i trust)<br>
+    can you hear the music (ludwig goransson)<br>
+    paris, texas (lana del rey, SYML)<br>
+    west coast (lana del rey)<br>
+    say yes to heaven (lana del rey)<br></p>
+
+    <h1>Summer 2023</h1>
+    <p>manana (tainy, young miko, the marias)<br>
+    tommy hanks (jakey)<br></p>
+
+    <h1>Senior Spring</h1>
+
+    <h2>Part 2</h2>
+    <p>i wonder (kanye west)<br>
+    nonviolent communication (metro boomin)<br>
+    flashing lights (kanye)<br></p>
+
+    <h2>Part 1</h2>
+    <p>you wouldn't know (zac crook)<br></p>
+
+    <h1>Senior Winter</h1>
+    <p>that nicotine (ava beathard)<br>
+    superstar (boyish)<br>
+    i got it (masho)<br></p>
+
+    <h1>Summer 2022</h1>
+    <p>uneasy (metronomy, spill tab)<br>
+    temple of the dragon (adam brian paul)<br></p>
+
+    <h1>Junior Year</h1>
+    <p>lovely day (bill withers)<br>
+    split (88rising, niki)<br></p>
+
+    <h1>Summer 2021 (Lifeguarding)</h1>
+    <p>beach bunny (cloud 9)<br>
+    brazil (declan mckenna)<br>
+    freaks (surf curse)<br>
+    karma (sarah kinsley)<br></p>
+
+    <h1>Late COVID</h1>
+    <p>hip (Mamamoo)<br>
+    bad girl (wooah)<br></p>
+
+    <h1>Freshman Year</h1>
+    <p>the louvre (lorde)<br>
+    righteous (juice wrld)<br>
+    ribs (lorde)<br>
+    drunk (keshi)<br>
+    skeletons (keshi)<br>
+    lowkey (niki)<br></p>
+</div>
+
+<!-- Desktop version -->
+<div id="desktop-content">
+    <div id="music-container">
+        <div id="song-list">
+            <!-- Songs will be populated -->
+        </div>
+        <div id="description-panel">
+            <div id="description-content">
+                <p>Select a song to view its description</p>
+            </div>
         </div>
     </div>
 </div>
@@ -401,6 +542,30 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Mobile detection function
+function isMobile() {
+    return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Initialize content based on device type
+function initializeContent() {
+    const mobileContent = document.getElementById('mobile-content');
+    const desktopContent = document.getElementById('desktop-content');
+    
+    if (isMobile()) {
+        // Show mobile content, hide desktop
+        mobileContent.style.display = 'block';
+        desktopContent.style.display = 'none';
+    } else {
+        // Show desktop content, hide mobile
+        mobileContent.style.display = 'none';
+        desktopContent.style.display = 'block';
+        
+        // Initialize the interactive music player for desktop
+        initializeMusicPlayer();
+    }
+}
+
 // Initialize when page loads
 function initializeMusicPlayer() {
     renderSongs();
@@ -470,8 +635,13 @@ function initializeMusicPlayer() {
 
 // Initialize based on DOM state
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeMusicPlayer);
+    document.addEventListener('DOMContentLoaded', initializeContent);
 } else {
-    initializeMusicPlayer();
+    initializeContent();
 }
+
+// Handle window resize to switch between mobile and desktop content
+window.addEventListener('resize', () => {
+    initializeContent();
+});
 </script>
