@@ -67,11 +67,15 @@ def make_post(post_filename):
     # Convert markdown to HTML
     content = markdown.markdown(content)
     title = extract_title(content)
+    slug = os.path.splitext(os.path.basename(post_filename))[0]
+    date = metadata.get('Date', '')
 
     # Convert
     post_html = BLOG_TEMPLATE \
         .replace('{{ title }}', title) \
-        .replace('{{ content }}', content)
+        .replace('{{ content }}', content) \
+        .replace('{{ slug }}', slug) \
+        .replace('{{ date }}', date)
 
     # Write
     post_filename = post_filename.replace('.md', '.html')
@@ -93,7 +97,7 @@ def build_blog():
     
     # Filter out posts where Visible is False
     visible_posts = [
-        (title, filename) 
+        (title, filename, metadata) 
         for title, filename, metadata in blog_posts 
         if metadata.get('Visible', 'True').lower() != 'false'
     ]
@@ -101,13 +105,47 @@ def build_blog():
     # Build index with links to posts
     blog_links = ''.join([
         f'<li><a href="/blog/{filename}">{title}</a></li>' 
-        for title, filename in visible_posts
+        for title, filename, _ in visible_posts
     ])
     index_html = BLOG_INDEX_TEMPLATE.replace('{{ blog_posts }}', f'<ul class="blog-posts">{blog_links}</ul>')
 
     # Write
     with open('docs/blog.html', 'w') as file:
         file.write(index_html)
+
+    # Generate sitemap.xml
+    base_url = 'https://cadentj.com'
+    sitemap_entries = []
+    # Home and blog index
+    sitemap_entries.append({'loc': f'{base_url}/', 'lastmod': ''})
+    sitemap_entries.append({'loc': f'{base_url}/blog.html', 'lastmod': ''})
+    # Blog posts
+    for title, filename, metadata in visible_posts:
+        lastmod = metadata.get('Date', '')
+        sitemap_entries.append({'loc': f'{base_url}/blog/{filename}', 'lastmod': lastmod})
+
+    sitemap_xml = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    ]
+    for entry in sitemap_entries:
+        sitemap_xml.append('<url>')
+        sitemap_xml.append(f'  <loc>{entry["loc"]}</loc>')
+        if entry['lastmod']:
+            sitemap_xml.append(f'  <lastmod>{entry["lastmod"]}</lastmod>')
+        sitemap_xml.append('</url>')
+    sitemap_xml.append('</urlset>')
+    with open('docs/sitemap.xml', 'w') as f:
+        f.write('\n'.join(sitemap_xml))
+
+    # Generate robots.txt
+    robots_txt = [
+        'User-agent: *',
+        'Allow: /',
+        'Sitemap: https://cadentj.com/sitemap.xml'
+    ]
+    with open('docs/robots.txt', 'w') as f:
+        f.write('\n'.join(robots_txt))
 
 ##### BUILD SITE #####
  

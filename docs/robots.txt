@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://cadentj.com/sitemap.xml
